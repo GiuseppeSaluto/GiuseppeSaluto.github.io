@@ -129,7 +129,21 @@
     .status.berth i {
       mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 18'%3E%3Cpath d='M0 15h24v3H0zM1 8h17l-3 5H4zM5 4h8v4H5zM10 0h2v4h-2z'/%3E%3Cpath d='M20.5 15v-4M17 9l3.5 2' fill='none' stroke='black' stroke-width='1.6'/%3E%3C/svg%3E") center / contain no-repeat;
     }
-    @media (prefers-reduced-motion: reduce) { .status.underway i { animation: none; } }
+    /* On card hover the other two ships move too: at anchor it swings on its chain, at berth it bobs at the quay. */
+    .cards a:hover .status.anchored i { animation: swing 2.4s ease-in-out infinite; transform-origin: 50% 0; }
+    .cards a:hover .status.berth i { animation: bob 1.6s ease-in-out infinite; }
+    @keyframes swing { 25% { transform: rotate(6deg); } 75% { transform: rotate(-6deg); } }
+    @keyframes bob { 50% { transform: translateY(-1.5px); } }
+    /* ...and puffs of smoke rise from its funnel, two of them half a cycle apart. 8px from the left is the funnel. */
+    .status.berth { position: relative; }
+    .status.berth::before, .status.berth::after {
+      content: ""; position: absolute; left: 8px; top: -3px; width: 4px; height: 4px;
+      border-radius: 50%; background: var(--muted); opacity: 0;
+    }
+    .cards a:hover .status.berth::before { animation: puff 1.8s ease-out infinite; }
+    .cards a:hover .status.berth::after { animation: puff 1.8s ease-out .9s infinite; }
+    @keyframes puff { from { opacity: .9; transform: translate(0, 0) scale(.6); } to { opacity: 0; transform: translate(5px, -10px) scale(1.8); } }
+    @media (prefers-reduced-motion: reduce) { .status i, .cards a:hover .status i, .cards a:hover .status.berth::before, .cards a:hover .status.berth::after { animation: none; } }
     .langs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 6px; }
     .langs span { padding: 0 7px; border: 1px solid var(--line); border-radius: 6px; font-size: 11px; color: var(--fg); }
 
@@ -152,6 +166,9 @@
     }
     footer nav { display: flex; flex-wrap: wrap; gap: 4px 16px; }
 
+    /* coordinates plus time need the room on narrow phones */
+    @media (max-width: 400px) { .bar { letter-spacing: 0; white-space: nowrap; } }
+
     @media (max-width: 520px) {
       .hero { flex-direction: column-reverse; align-items: flex-start; margin-top: 28px; }
       .portrait { width: 96px; height: 96px; }
@@ -164,7 +181,7 @@
 <main>
   <div class="bar">
     <a href="/">giuseppe saluto</a>
-    <span class="clock" id="clock">modena</span>
+    <span class="clock" id="clock">44.65°N 10.93°E</span>
   </div>
 
   <header class="hero">
@@ -226,7 +243,7 @@
         <span class="langs"><span>python</span><span>flask</span><span>mongodb</span><span>folium</span></span>
       </a></li>
       <li><a href="https://github.com/GiuseppeSaluto/MQTT-Telemetry-Lab">
-        <span class="head"><span class="tag">industrial iot</span><span class="status underway"><i aria-hidden="true"></i>in progress</span></span>
+        <span class="head"><span class="tag">industrial iot</span><span class="status anchored"><i aria-hidden="true"></i>on hold</span></span>
         <strong>MQTT-Telemetry-Lab</strong>
         <span class="desc">Simulated factory machines publish over MQTT, a Rust service stores them, Grafana shows them live.</span>
         <span class="langs"><span>python</span><span>rust</span><span>timescaledb</span><span>grafana</span><span>docker</span></span>
@@ -297,10 +314,10 @@
   </footer>
 </main>
 <script>
-  // Live Modena time in the top bar, like the watch face. Without JS it just says "modena".
+  // coordinates and live time in the top bar, like the watch face. Without JS it shows just the coordinates.
   const clock = document.getElementById("clock");
   const fmt = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Rome", weekday: "short", hour: "2-digit", minute: "2-digit" });
-  const tick = () => { clock.textContent = "modena · " + fmt.format(new Date()); };
+  const tick = () => { clock.textContent = "44.65°N 10.93°E · " + fmt.format(new Date()); };
   tick();
   setInterval(tick, 15000);
 
