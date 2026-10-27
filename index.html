@@ -41,7 +41,16 @@
     .clock { color: var(--accent); font-variant-numeric: tabular-nums; }
 
     /* hero: name first, portrait on the right */
-    .hero { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin: 40px 0 28px; }
+    .hero { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin: 40px 0 28px; }
+    /* The portrait floats on a few rows of the same waves as the "in progress" ship, drifting slowly. */
+    .mooring { flex: none; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .waves {
+      align-self: stretch; height: 16px; background-color: var(--line);
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 4'%3E%3Cpath d='M0 2.5Q2 .5 4 2.5T8 2.5' fill='none' stroke='black' stroke-width='1.2'/%3E%3C/svg%3E") 0 0 / 16px 8px repeat;
+      animation: drift 4s linear infinite;
+    }
+    @keyframes drift { to { mask-position: 16px 0; } }
+    @media (prefers-reduced-motion: reduce) { .waves { animation: none; } }
     .badge {
       display: inline-block; margin: 0 0 12px; padding: 2px 8px;
       background: var(--accent); color: var(--bg);
@@ -121,7 +130,6 @@
       mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 18'%3E%3Cpath d='M0 15h24v3H0zM1 8h17l-3 5H4zM5 4h8v4H5zM10 0h2v4h-2z'/%3E%3Cpath d='M20.5 15v-4M17 9l3.5 2' fill='none' stroke='black' stroke-width='1.6'/%3E%3C/svg%3E") center / contain no-repeat;
     }
     @media (prefers-reduced-motion: reduce) { .status.underway i { animation: none; } }
-
     .langs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 6px; }
     .langs span { padding: 0 7px; border: 1px solid var(--line); border-radius: 6px; font-size: 11px; color: var(--fg); }
 
@@ -166,9 +174,12 @@
       <p class="tagline">Backend developer. I build backends that turn real-world data into something people can use. Python is my main language; Rust is what I reach for when a service has to be small and fast.</p>
       <p class="tagline">Off the clock: trekking and nature, video games, fantasy and sci-fi worlds, and optimizing something that probably didn't need optimizing.</p>
     </div>
-    <div class="portrait" tabindex="0">
-      <img src="assets/portrait.png" alt="Portrait of Giuseppe Saluto" width="120" height="120">
-      <img class="dither" src="assets/portrait-dither.png" alt="" width="120" height="120">
+    <div class="mooring">
+      <div class="portrait" tabindex="0">
+        <img src="assets/portrait.png" alt="Portrait of Giuseppe Saluto" width="120" height="120">
+        <img class="dither" src="assets/portrait-dither.png" alt="" width="120" height="120">
+      </div>
+      <span class="waves" aria-hidden="true"></span>
     </div>
   </header>
 
@@ -279,9 +290,8 @@
       <a href="https://github.com/GiuseppeSaluto">github</a>
       <a href="https://linkedin.com/in/giuseppe-saluto">linkedin</a>
       <a rel="me" href="https://mastodon.social/@Giuseppe_Saluto">mastodon</a>
+      <a href="mailto:g.saluto15@gmail.com">email</a>
       <a href="https://hex.pm/packages/aisstream">hex</a>
-      <a href="mailto:g.saluto15@gmail.com" target="_blank" rel="noreferrer">mail</a>
-      <!-- <a href="mailto:you@example.com">email</a> -->
     </nav>
     <span>exit 0</span>
   </footer>
@@ -293,6 +303,48 @@
   const tick = () => { clock.textContent = "modena · " + fmt.format(new Date()); };
   tick();
   setInterval(tick, 15000);
+
+  // Name wave: the letter under the mouse and its neighbours keep scrambling while the mouse is there,
+  // and settle back a moment after it moves on, so moving across the name leaves a wave behind.
+  // Each letter is its own span; the monospace font keeps every letter the same width.
+  const name = document.querySelector("h1");
+  const original = name.textContent;
+  const glyphs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ#%&*+/<>";
+  name.setAttribute("aria-label", original);
+  name.innerHTML = [...original].map((c) => `<span aria-hidden="true">${c}</span>`).join("");
+  const letters = [...name.children];
+  const hotUntil = letters.map(() => 0); // time until which each letter keeps scrambling
+  let hovered = -1;
+  let wave = null;
+
+  const frame = () => {
+    const now = performance.now();
+    if (hovered >= 0) {
+      // the hovered letter stays hot longest, its neighbours a bit less: that's the wave's shape
+      for (let d = -2; d <= 2; d++) {
+        const i = hovered + d;
+        if (i >= 0 && i < letters.length) hotUntil[i] = Math.max(hotUntil[i], now + 300 - Math.abs(d) * 100);
+      }
+    }
+    letters.forEach((el, i) => {
+      el.textContent = original[i] !== " " && hotUntil[i] > now ? glyphs[Math.floor(Math.random() * glyphs.length)] : original[i];
+    });
+    if (hovered < 0 && hotUntil.every((t) => t <= now)) { clearInterval(wave); wave = null; }
+  };
+
+  letters.forEach((el, i) => el.addEventListener("mouseenter", () => {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    hovered = i;
+    if (!wave) wave = setInterval(frame, 50);
+  }));
+  name.addEventListener("mouseleave", () => { hovered = -1; });
+
+  // A note for whoever opens the developer tools.
+  console.log(
+    "%c      |\n     _|_\n ___|___|___\n \\  o o o  /\n~~~~~~~~~~~~~~~\n\n%cLooking under the hood? Say hi: g.saluto15@gmail.com",
+    "color: #d4ef2b; font-family: monospace;",
+    "color: inherit;"
+  );
 </script>
 </body>
 </html>
