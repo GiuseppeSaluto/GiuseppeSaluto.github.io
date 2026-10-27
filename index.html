@@ -124,6 +124,14 @@
     .langs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 6px; }
     .langs span { padding: 0 7px; border: 1px solid var(--line); border-radius: 6px; font-size: 11px; color: var(--fg); }
 
+    /* case study: three short answers and one image */
+    .case h3 { margin: 24px 0 6px; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); }
+    .case p { margin: 0 0 10px; }
+    .case ul { margin: 0; padding-left: 18px; }
+    .case figure { margin: 20px 0 0; }
+    .case img { display: block; width: 100%; max-width: 380px; height: auto; border: 1px solid var(--line); border-radius: 12px; }
+    .case figcaption { margin-top: 6px; color: var(--muted); font-size: 12px; }
+
     .now { list-style: none; padding: 0; margin: 0; }
     .now li { padding: 8px 0; border-bottom: 1px dashed var(--line); }
     .now li::before { content: "› "; color: var(--accent); }
@@ -171,6 +179,7 @@
 
   <nav class="buttons" aria-label="Sections">
     <a href="#projects">projects</a>
+    <a href="#case-study">case study</a>
     <a href="#now">now</a>
     <a href="https://github.com/GiuseppeSaluto">github</a>
     <a href="https://linkedin.com/in/giuseppe-saluto">cv</a>
@@ -216,6 +225,31 @@
         <span class="langs"><span>rust</span><span>ratatui</span></span>
       </a></li>
     </ul>
+  </section>
+
+  <section id="case-study" class="case">
+    <h2>case study: harborwatch</h2>
+
+    <h3>Why this stack</h3>
+    <p>Python for fast prototyping and its huge set of libraries, and because it's the language I've known the longest. When you work with data, it's always a sensible choice.</p>
+    <p>MongoDB could have been something else, but AIS data changes with the type of ship, and a document fits that well. It also gives me geospatial indexes and automatic expiry (TTL) out of the box.</p>
+    <p>Streamlit because I'm not a frontend developer, and it kept the whole stack in Python.</p>
+
+    <h3>What didn't work the first time</h3>
+    <p>On October 9 my dashboard showed zero ships in the port of Genoa for over two hours. The database was up, the ingestion was running, the stream was connected. So I listened to the whole world for one minute: 8,066 AIS messages. The Mediterranean: 1,030. Marseille 201, Livorno 29. Genoa: 0.</p>
+    <p>Nothing was broken on my side: the shore receiver covering Genoa had gone quiet. Now one click on Status listens to the live stream for 20 seconds and tells you which link failed: the database, the ingestion, the AIS feed, or just no coverage over the port.</p>
+    <p>In data, a zero is a claim. You should be able to back it up.</p>
+
+    <h3>What I'd do differently today</h3>
+    <ul>
+      <li>Store course and heading from day one.</li>
+      <li>Tune thresholds on real data before building on top of them.</li>
+    </ul>
+
+    <figure>
+      <img src="assets/harborwatch-status.gif" alt="HarborWatch Status panel checking the live AIS stream" width="690" height="750" loading="lazy">
+      <figcaption>The Status check on the live stream. <a href="https://github.com/GiuseppeSaluto/HarborWatch">Code and full write-up on GitHub</a>.</figcaption>
+    </figure>
   </section>
 
   <section id="now">
