@@ -316,16 +316,14 @@
     <p>Nothing was broken on my side: the shore receiver covering Genoa had gone quiet. Now one click on Status listens to the live stream for 20 seconds and tells you which link failed: the database, the ingestion, the AIS feed, or just no coverage over the port.</p>
     <p>In data, a zero is a claim. You should be able to back it up.</p>
 
-    <h3>What I'd do differently today</h3>
-    <ul>
-      <li>Store course and heading from day one.</li>
-      <li>Tune thresholds on real data before building on top of them.</li>
-    </ul>
-
     <figure>
       <img src="assets/harborwatch-status.gif" alt="HarborWatch Status panel checking the live AIS stream" width="690" height="750" loading="lazy">
       <figcaption>The Status check on the live stream. <a href="https://github.com/GiuseppeSaluto/HarborWatch">Code and full write-up on GitHub</a>.</figcaption>
     </figure>
+
+    <h3>What I'd do differently today</h3>
+    <p>Plan for a second data source from day one. Everything depends on AISStream, a free feed with no guarantees, and October 9 showed what happens when its receiver over Genoa goes quiet. The Status check tells me which link broke, but it can't bring the ships back.</p>
+    <p>Today I'd build the ingestion to merge more than one feed and drop the duplicates: AISHub, which shares data with whoever contributes a receiver; a commercial network such as Worldwide AIS; or my own receiver, an RTL-SDR and a VHF antenna on the Raspberry Pi.</p>
   </section>
 
   <section id="now">
