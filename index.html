@@ -175,8 +175,10 @@
 
     /* Ships cross the background in two lanes, behind the content. Fixed to the window, so they show
        wherever you've scrolled. The script picks kind, direction and when each lane sails. */
-    .sea { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
-    .ship { position: absolute; left: 0; color: var(--line); visibility: hidden; }
+    /* On phones the address bar grows and shrinks while scrolling, which resizes the window: a fixed height
+       (lvh, the window with the bar hidden) keeps the lanes still instead of jumping with it. */
+    .sea { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100lvh; z-index: -1; pointer-events: none; overflow: hidden; }
+    .ship { position: absolute; left: 0; color: var(--line); visibility: hidden; will-change: transform; }
     .ship svg { display: block; width: 100%; }
     .ship.sailing { visibility: visible; animation: cross var(--crossing) linear forwards; }
     .ship.sailing.west { animation-name: cross-west; }
