@@ -8,6 +8,15 @@
   <meta property="og:title" content="Giuseppe Saluto">
   <meta property="og:description" content="Backend developer. I build backends that turn real-world data into something people can use.">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://giuseppesaluto.github.io/">
+  <!-- link preview for Discord, LinkedIn and chats; made with Pillow in the site's palette -->
+  <meta property="og:image" content="https://giuseppesaluto.github.io/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Giuseppe Saluto, backend developer: name, tagline and dithered portrait">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- favicon: the "in progress" ship in lime on the page's black -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%230f0f0e'/%3E%3Cpath fill='%23d4ef2b' d='M2 13h20l-3 5H5zM7 9h9v4H7zM13 5h2v4h-2z'/%3E%3C/svg%3E">
   <style>
     /* Rangeman palette: black body, fluo strap, red dial markers, steel guards. Dark only, on purpose. */
     :root {
@@ -20,6 +29,8 @@
       --accent: #d4ef2b;
       --signal: #ef4444;
       --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      /* one wave, used as a mask under the portrait and under the "in progress" ship */
+      --wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 4'%3E%3Cpath d='M0 2.5Q2 .5 4 2.5T8 2.5' fill='none' stroke='black' stroke-width='1.2'/%3E%3C/svg%3E");
     }
 
     * { box-sizing: border-box; }
@@ -46,11 +57,10 @@
     .mooring { flex: none; display: flex; flex-direction: column; align-items: center; gap: 10px; }
     .waves {
       align-self: stretch; height: 16px; background-color: var(--line);
-      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 4'%3E%3Cpath d='M0 2.5Q2 .5 4 2.5T8 2.5' fill='none' stroke='black' stroke-width='1.2'/%3E%3C/svg%3E") 0 0 / 16px 8px repeat;
+      mask: var(--wave) 0 0 / 16px 8px repeat;
       animation: drift 4s linear infinite;
     }
     @keyframes drift { to { mask-position: 16px 0; } }
-    @media (prefers-reduced-motion: reduce) { .waves { animation: none; } }
     .badge {
       display: inline-block; margin: 0 0 12px; padding: 2px 8px;
       background: var(--accent); color: var(--bg);
@@ -83,7 +93,6 @@
     .readout dd { margin: 0; }
     .cursor::after { content: "▋"; color: var(--signal); animation: blink 1.1s steps(1) infinite; }
     @keyframes blink { 50% { opacity: 0; } }
-    @media (prefers-reduced-motion: reduce) { .cursor::after { animation: none; } }
 
     /* nav as watch buttons */
     .buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 44px; }
@@ -117,7 +126,7 @@
     .status.underway { color: var(--accent); }
     .status.underway i {
       mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 18'%3E%3Cpath d='M2 11h20l-3 5H5zM7 7h9v4H7zM13 3h2v4h-2z'/%3E%3C/svg%3E") 50% 0% / 100% 72% no-repeat,
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 4'%3E%3Cpath d='M0 2.5Q2 .5 4 2.5T8 2.5' fill='none' stroke='black' stroke-width='1.2'/%3E%3C/svg%3E") 0 100% / 8px 4px repeat-x;
+        var(--wave) 0 100% / 8px 4px repeat-x;
       animation: sail 1.2s linear infinite;
     }
     @keyframes sail { 50% { mask-position: 50% 30%, 4px 100%; } to { mask-position: 50% 0%, 8px 100%; } }
@@ -125,7 +134,7 @@
     .status.anchored i {
       mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 8h20l-3 5H5zM7 4h9v4H7zM13 0h2v4h-2z'/%3E%3Cpath d='M12 13v8M9.5 16h5M7.5 18.5Q12 24 16.5 18.5' fill='none' stroke='black' stroke-width='1.6'/%3E%3C/svg%3E") center / contain no-repeat;
     }
-    .status.berth { color: var(--fg); }
+    .status.berth { color: var(--fg); position: relative; }
     .status.berth i {
       mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 18'%3E%3Cpath d='M0 15h24v3H0zM1 8h17l-3 5H4zM5 4h8v4H5zM10 0h2v4h-2z'/%3E%3Cpath d='M20.5 15v-4M17 9l3.5 2' fill='none' stroke='black' stroke-width='1.6'/%3E%3C/svg%3E") center / contain no-repeat;
     }
@@ -135,7 +144,6 @@
     @keyframes swing { 25% { transform: rotate(6deg); } 75% { transform: rotate(-6deg); } }
     @keyframes bob { 50% { transform: translateY(-1.5px); } }
     /* ...and puffs of smoke rise from its funnel, two of them half a cycle apart. 8px from the left is the funnel. */
-    .status.berth { position: relative; }
     .status.berth::before, .status.berth::after {
       content: ""; position: absolute; left: 8px; top: -3px; width: 4px; height: 4px;
       border-radius: 50%; background: var(--muted); opacity: 0;
@@ -143,7 +151,6 @@
     .cards a:hover .status.berth::before { animation: puff 1.8s ease-out infinite; }
     .cards a:hover .status.berth::after { animation: puff 1.8s ease-out .9s infinite; }
     @keyframes puff { from { opacity: .9; transform: translate(0, 0) scale(.6); } to { opacity: 0; transform: translate(5px, -10px) scale(1.8); } }
-    @media (prefers-reduced-motion: reduce) { .status i, .cards a:hover .status i, .cards a:hover .status.berth::before, .cards a:hover .status.berth::after { animation: none; } }
     .langs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 6px; }
     .langs span { padding: 0 7px; border: 1px solid var(--line); border-radius: 6px; font-size: 11px; color: var(--fg); }
 
@@ -166,6 +173,30 @@
     }
     footer nav { display: flex; flex-wrap: wrap; gap: 4px 16px; }
 
+    /* Ships cross the background in two lanes, behind the content. Fixed to the window, so they show
+       wherever you've scrolled. The script picks kind, direction and when each lane sails. */
+    .sea { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+    .ship { position: absolute; left: 0; color: var(--line); visibility: hidden; }
+    .ship svg { display: block; width: 100%; }
+    .ship.sailing { visibility: visible; animation: cross var(--crossing) linear forwards; }
+    .ship.sailing.west { animation-name: cross-west; }
+    /* each kind has its own size and crossing time */
+    .ship[data-kind="tanker"] { width: 64px; --crossing: 30s; }
+    .ship[data-kind="tug"] { width: 56px; --crossing: 26s; }
+    .ship[data-kind="boat"] { width: 48px; --crossing: 22s; }
+    /* flip each drawing so its bow points where it sails: most face left, the tug faces right */
+    .ship:not(.west):not(.bow-right) svg, .ship.west.bow-right svg { transform: scaleX(-1); }
+    .ship .hull { animation: roll 3.2s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
+    /* smoke from the funnel, like the "done" cards: two puffs half a cycle apart, rising and trailing astern.
+       --drift is +1 or -1, toward the stern of that drawing; the flip mirrors it with the ship. */
+    .ship svg { overflow: visible; }
+    .ship .smoke circle { opacity: 0; transform-box: fill-box; transform-origin: center; animation: smoke 2.4s ease-out infinite; }
+    .ship .smoke circle + circle { animation-delay: 1.2s; }
+    @keyframes smoke { from { opacity: .9; transform: translate(0, 0) scale(.6); } to { opacity: 0; transform: translate(calc(var(--drift) * 4px), -5px) scale(1.7); } }
+    @keyframes cross { from { transform: translateX(-80px); } to { transform: translateX(100vw); } }
+    @keyframes cross-west { from { transform: translateX(100vw); } to { transform: translateX(-80px); } }
+    @keyframes roll { 50% { transform: rotate(-2deg) translateY(-1px); } }
+
     /* coordinates plus time need the room on narrow phones */
     @media (max-width: 400px) { .bar { letter-spacing: 0; white-space: nowrap; } }
 
@@ -175,6 +206,9 @@
       .readout { grid-template-columns: 1fr; gap: 0; }
       .readout dd { margin-bottom: 8px; }
     }
+
+    /* For visitors who ask their system for less motion: every animation on the page stops here. */
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; } }
   </style>
 </head>
 <body>
@@ -201,7 +235,6 @@
   </header>
 
   <dl class="readout">
-    <dt>stack</dt><dd>python · rust · elixir · docker · mongodb</dd>
     <dt>shipped</dt><dd><a href="https://hex.pm/packages/aisstream">aisstream</a> on hex</dd>
     <dt>base</dt><dd>modena, italy</dd>
     <dt>seeking</dt><dd class="cursor">backend or devops · emilia-romagna or remote </dd>
@@ -296,9 +329,8 @@
   <section id="now">
     <h2>now</h2>
     <ul class="now">
-      <li>Following a course on robotic systems maintenance (Robotica 4.0).</li>
       <li>Studying Rust and Elixir.</li>
-      <li>Looking for a backend or DevOps role. <a href="https://linkedin.com/in/giuseppe-saluto">Say hi</a>.</li>
+      <li>Looking for a backend or DevOps role. <a href="mailto:g.saluto15@gmail.com">Say hi</a>.</li>
     </ul>
   </section>
 
@@ -313,11 +345,20 @@
     <span>exit 0</span>
   </footer>
 </main>
+<div class="sea" aria-hidden="true">
+  <!-- two lanes; the script picks what sails in each -->
+  <span class="ship" style="top: 30%"></span>
+  <span class="ship" style="top: 70%"></span>
+</div>
 <script>
+  // Asked once, used by the name wave and the background ships.
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+
   // coordinates and live time in the top bar, like the watch face. Without JS it shows just the coordinates.
   const clock = document.getElementById("clock");
+  const coords = clock.textContent;
   const fmt = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Rome", weekday: "short", hour: "2-digit", minute: "2-digit" });
-  const tick = () => { clock.textContent = "44.65°N 10.93°E · " + fmt.format(new Date()); };
+  const tick = () => { clock.textContent = coords + " · " + fmt.format(new Date()); };
   tick();
   setInterval(tick, 15000);
 
@@ -350,11 +391,48 @@
   };
 
   letters.forEach((el, i) => el.addEventListener("mouseenter", () => {
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (reduceMotion.matches) return;
     hovered = i;
     if (!wave) wave = setInterval(frame, 50);
   }));
   name.addEventListener("mouseleave", () => { hovered = -1; });
+
+  // Background ships: two lanes, each on its own endless loop. Every crossing picks a random kind and
+  // direction, then the lane rests 2-10 s and sails again. No ships with reduced motion.
+  // Line icons on a 24x24 grid. Tanker and tug are from IconOven (iconoven.com, MIT license, via Iconify);
+  // the boat is the ship on the cards, redrawn in the same line. smoke: where the puffs start (x, y).
+  const shapes = {
+    tanker: { bowRight: false, smoke: [19.25, 4.5], body: '<path d="M3.75 12.5a3 3 0 0 1 6 0Zm6.75 0a3 3 0 0 1 6 0Zm7 0V6.75a1 1 0 0 1 1-1H20a1 1 0 0 1 1 1v5.75Zm-14.75 0h18.5l-1.75 3.9a1.75 1.75 0 0 1-1.62 1.1H6.12a1.75 1.75 0 0 1-1.62-1.1Z"/>' },
+    tug: { bowRight: true, smoke: [11, 4], body: '<path d="M5.75 12.25v-2q0-1 1-1h.75q1 0 1-1v-2q0-1 1-1h3q1 0 1 1v6q0 1-1 1H6.75q-1 0-1-1m4.75-4.5h1m4.75 5.5v-7m-1.5 2h3"/>' +
+      '<path d="M3.75 13.25H16q1 0 1.35-.94l.05-.12q.35-.94 1.35-.94h1.5q1 0 .77.97l-1.29 5.56q-.23.97-1.23.97H6q-1 0-1.38-.93l-1.49-3.64q-.38-.93.62-.93"/>' +
+      '<path stroke-width="2" d="M8.5 16h.01m3.99 0h.01"/>' },
+    boat: { bowRight: false, smoke: [14.5, 3.5], body: '<path d="M2.75 12.5h18.5l-2.4 4.2a1.75 1.75 0 0 1-1.52.8H6.67a1.75 1.75 0 0 1-1.52-.8ZM7.25 12.5v-3.25a1 1 0 0 1 1-1h7.5a1 1 0 0 1 1 1v3.25M13 8.25v-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v3"/>' },
+  };
+  const drawShip = (kind) => {
+    const { bowRight, smoke: [x, y], body } = shapes[kind];
+    const puff = `<circle cx="${x}" cy="${y}" r="1" stroke-width="1"/>`;
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">` +
+      `<g class="hull">${body}</g><g class="smoke" style="--drift: ${bowRight ? -1 : 1}">${puff}${puff}</g></svg>`;
+  };
+  const kinds = Object.keys(shapes);
+  const sail = (ship) => {
+    const kind = kinds[Math.floor(Math.random() * kinds.length)];
+    ship.dataset.kind = kind;
+    ship.classList.toggle("bow-right", shapes[kind].bowRight);
+    ship.innerHTML = drawShip(kind);
+    ship.classList.toggle("west", Math.random() < 0.5);
+    ship.classList.add("sailing");
+  };
+  if (!reduceMotion.matches) {
+    document.querySelectorAll(".ship").forEach((ship) => {
+      ship.addEventListener("animationend", (e) => {
+        if (e.animationName !== "cross" && e.animationName !== "cross-west") return; // ignore the roll
+        ship.classList.remove("sailing");
+        setTimeout(() => sail(ship), 2000 + Math.random() * 8000);
+      });
+      setTimeout(() => sail(ship), 1000 + Math.random() * 6000); // staggered first departures
+    });
+  }
 
   // A note for whoever opens the developer tools.
   console.log(
