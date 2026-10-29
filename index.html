@@ -171,7 +171,8 @@
     .case figcaption { margin-top: 6px; color: var(--muted); font-size: 12px; }
 
     .now { list-style: none; padding: 0; margin: 0; }
-    .now li { padding: 8px 0; border-bottom: 1px dashed var(--line); }
+    /* hanging indent: the "› " marker is 2 characters wide, so wrapped lines start under the text, not under the arrow */
+    .now li { padding: 8px 0 8px 2ch; text-indent: -2ch; border-bottom: 1px dashed var(--line); }
     .now li::before { content: "› "; color: var(--accent); }
 
     footer {
