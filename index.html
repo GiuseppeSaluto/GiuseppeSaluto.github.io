@@ -49,7 +49,15 @@
       font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted);
     }
     .bar a { text-decoration: none; color: var(--fg); font-weight: 700; }
-    .clock { color: var(--accent); font-variant-numeric: tabular-nums; }
+    .clock { margin-left: auto; color: var(--accent); font-variant-numeric: tabular-nums; }
+    /* language switch, a small watch button next to the clock; the language you're reading is lit */
+    .lang {
+      margin-left: 12px; padding: 0 6px; border: 1px solid var(--line); border-radius: 6px; background: none;
+      color: var(--muted); font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer;
+    }
+    .lang:hover { border-color: var(--accent); }
+    .lang:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    html:not([lang="it"]) .lang span:first-child, html[lang="it"] .lang span:last-child { color: var(--fg); font-weight: 700; }
 
     /* hero: name first, portrait on the right */
     .hero { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin: 40px 0 28px; }
@@ -199,8 +207,12 @@
     @keyframes cross-west { from { transform: translateX(100vw); } to { transform: translateX(-80px); } }
     @keyframes roll { 50% { transform: rotate(-2deg) translateY(-1px); } }
 
-    /* coordinates plus time need the room on narrow phones */
-    @media (max-width: 400px) { .bar { letter-spacing: 0; white-space: nowrap; } }
+    /* coordinates plus time need the room on narrow phones: name and language on top, the clock on its own row */
+    @media (max-width: 400px) {
+      .bar { flex-wrap: wrap; row-gap: 6px; letter-spacing: 0; white-space: nowrap; }
+      .clock { order: 1; width: 100%; }
+      .lang { margin-left: auto; }
+    }
 
     @media (max-width: 520px) {
       .hero { flex-direction: column-reverse; align-items: flex-start; margin-top: 28px; }
@@ -218,18 +230,19 @@
   <div class="bar">
     <a href="/">giuseppe saluto</a>
     <span class="clock" id="clock">44.65°N 10.93°E</span>
+    <button class="lang" id="lang" type="button" hidden><span>en</span> / <span>it</span></button>
   </div>
 
   <header class="hero">
     <div>
       <p class="badge">open to work</p>
       <h1>Giuseppe Saluto</h1>
-      <p class="tagline">Backend developer. I build backends that turn real-world data into something people can use. Python is my main language; Rust is what I reach for when a service has to be small and fast.</p>
-      <p class="tagline">Off the clock: trekking and nature, video games, fantasy and sci-fi worlds, and optimizing something that probably didn't need optimizing.</p>
+      <p class="tagline" data-i18n="tagline">Backend developer. I build backends that turn real-world data into something people can use. Python is my main language; Rust is what I reach for when a service has to be small and fast.</p>
+      <p class="tagline" data-i18n="offClock">Off the clock: trekking and nature, video games, fantasy and sci-fi worlds, and optimizing something that probably didn't need optimizing.</p>
     </div>
     <div class="mooring">
       <div class="portrait" tabindex="0">
-        <img src="assets/portrait.png" alt="Portrait of Giuseppe Saluto" width="120" height="120">
+        <img src="assets/portrait.png" alt="Portrait of Giuseppe Saluto" data-i18n-alt="portrait" width="120" height="120">
         <img class="dither" src="assets/portrait-dither.png" alt="" width="120" height="120">
       </div>
       <span class="waves" aria-hidden="true"></span>
@@ -237,56 +250,56 @@
   </header>
 
   <dl class="readout">
-    <dt>shipped</dt><dd><a href="https://hex.pm/packages/aisstream">aisstream</a> on hex</dd>
-    <dt>base</dt><dd>modena, italy</dd>
-    <dt>seeking</dt><dd class="cursor">backend or devops · emilia-romagna or remote </dd>
+    <dt data-i18n="shipped">shipped</dt><dd data-i18n="shippedOn"><a href="https://hex.pm/packages/aisstream">aisstream</a> on hex</dd>
+    <dt>base</dt><dd data-i18n="base">modena, italy</dd>
+    <dt data-i18n="seeking">seeking</dt><dd class="cursor" data-i18n="seekingWhat">backend or devops · emilia-romagna or remote </dd>
   </dl>
 
-  <nav class="buttons" aria-label="Sections">
-    <a href="#projects">projects</a>
+  <nav class="buttons" aria-label="Sections" data-i18n-label="sections">
+    <a href="#projects" data-i18n="projects">projects</a>
     <a href="#case-study">case study</a>
-    <a href="#now">now</a>
+    <a href="#now" data-i18n="now">now</a>
     <a href="https://github.com/GiuseppeSaluto">github</a>
     <a href="assets/cv.pdf">cv</a>
   </nav>
 
   <section id="projects">
-    <h2>projects</h2>
+    <h2 data-i18n="projects">projects</h2>
     <ul class="cards">
       <li><a href="https://github.com/GiuseppeSaluto/aisstream_elixir">
-        <span class="head"><span class="tag">hex package</span><span class="status underway"><i aria-hidden="true"></i>in progress</span></span>
+        <span class="head"><span class="tag" data-i18n="tagHex">hex package</span><span class="status underway" data-i18n="underway"><i aria-hidden="true"></i>in progress</span></span>
         <strong>aisstream</strong>
-        <span class="desc">WebSocket client for the AISStream API. Reconnects with backoff, compression, live ship positions.</span>
+        <span class="desc" data-i18n="descAisstream">WebSocket client for the AISStream API. Reconnects with backoff, compression, live ship positions.</span>
         <span class="langs"><span>elixir</span><span>websocket</span></span>
       </a></li>
       <li><a href="https://github.com/GiuseppeSaluto/HarborWatch">
-        <span class="head"><span class="tag">port of genoa</span><span class="status underway"><i aria-hidden="true"></i>in progress</span></span>
+        <span class="head"><span class="tag" data-i18n="tagGenoa">port of genoa</span><span class="status underway" data-i18n="underway"><i aria-hidden="true"></i>in progress</span></span>
         <strong>HarborWatch</strong>
-        <span class="desc">Live port congestion monitor on AIS data, with a berth plan optimizer for the ships waiting at anchor.</span>
+        <span class="desc" data-i18n="descHarborWatch">Live port congestion monitor on AIS data, with a berth plan optimizer for the ships waiting at anchor.</span>
         <span class="langs"><span>python</span><span>mongodb</span><span>streamlit</span><span>or-tools</span></span>
       </a></li>
       <li><a href="https://github.com/GiuseppeSaluto/AstroForge">
-        <span class="head"><span class="tag">nasa data</span><span class="status berth"><i aria-hidden="true"></i>done</span></span>
+        <span class="head"><span class="tag" data-i18n="tagNasa">nasa data</span><span class="status berth" data-i18n="berth"><i aria-hidden="true"></i>done</span></span>
         <strong>AstroForge</strong>
-        <span class="desc">Tracks near-Earth asteroids: a Python API, a Rust risk engine, MongoDB and a terminal dashboard.</span>
+        <span class="desc" data-i18n="descAstroForge">Tracks near-Earth asteroids: a Python API, a Rust risk engine, MongoDB and a terminal dashboard.</span>
         <span class="langs"><span>python</span><span>rust</span><span>mongodb</span><span>docker</span></span>
       </a></li>
       <li><a href="https://github.com/GiuseppeSaluto/Umbra">
-        <span class="head"><span class="tag">satellite data</span><span class="status anchored"><i aria-hidden="true"></i>on hold</span></span>
+        <span class="head"><span class="tag" data-i18n="tagSatellite">satellite data</span><span class="status anchored" data-i18n="anchored"><i aria-hidden="true"></i>on hold</span></span>
         <strong>Umbra</strong>
-        <span class="desc">Finds urban heat islands and green areas from Sentinel-2 imagery, shown on a navigable map.</span>
+        <span class="desc" data-i18n="descUmbra">Finds urban heat islands and green areas from Sentinel-2 imagery, shown on a navigable map.</span>
         <span class="langs"><span>python</span><span>flask</span><span>mongodb</span><span>folium</span></span>
       </a></li>
       <li><a href="https://github.com/GiuseppeSaluto/MQTT-Telemetry-Lab">
-        <span class="head"><span class="tag">industrial iot</span><span class="status anchored"><i aria-hidden="true"></i>on hold</span></span>
+        <span class="head"><span class="tag" data-i18n="tagIot">industrial iot</span><span class="status anchored" data-i18n="anchored"><i aria-hidden="true"></i>on hold</span></span>
         <strong>MQTT-Telemetry-Lab</strong>
-        <span class="desc">Simulated factory machines publish over MQTT, a Rust service stores them, Grafana shows them live.</span>
+        <span class="desc" data-i18n="descMqtt">Simulated factory machines publish over MQTT, a Rust service stores the readings, Grafana shows them live.</span>
         <span class="langs"><span>python</span><span>rust</span><span>timescaledb</span><span>grafana</span><span>docker</span></span>
       </a></li>
       <li><a href="https://github.com/GiuseppeSaluto/Mouse_mover">
-        <span class="head"><span class="tag">terminal app</span><span class="status berth"><i aria-hidden="true"></i>done</span></span>
+        <span class="head"><span class="tag" data-i18n="tagTerminal">terminal app</span><span class="status berth" data-i18n="berth"><i aria-hidden="true"></i>done</span></span>
         <strong>Mouse_mover</strong>
-        <span class="desc">Keeps the computer awake by nudging the mouse, with a terminal interface.</span>
+        <span class="desc" data-i18n="descMouse">Keeps the computer awake by nudging the mouse, with a terminal interface.</span>
         <span class="langs"><span>rust</span><span>ratatui</span></span>
       </a></li>
     </ul>
@@ -295,10 +308,10 @@
   <section id="stack">
     <h2>stack</h2>
     <dl class="readout">
-      <dt>python</dt><dd>My Swiss Army knife.</dd>
-      <dt>rust</dt><dd>For when the going gets tough.</dd>
-      <dt>elixir</dt><dd>Learning the "let it crash" philosophy.</dd>
-      <dt>docker</dt><dd>To ship what I need, anywhere.</dd>
+      <dt>python</dt><dd data-i18n="python">My Swiss Army knife.</dd>
+      <dt>rust</dt><dd data-i18n="rust">For the heavy lifting.</dd>
+      <dt>elixir</dt><dd data-i18n="elixir">Learning the "let it crash" philosophy.</dd>
+      <dt>docker</dt><dd data-i18n="docker">To ship what I need, anywhere.</dd>
       <dt>mongodb</dt><dd>Build anything, change everything.</dd>
     </dl>
   </section>
@@ -306,36 +319,36 @@
   <section id="case-study" class="case">
     <h2>case study: harborwatch</h2>
 
-    <h3>Why this stack</h3>
-    <p>Python for fast prototyping and its huge set of libraries, and because it's the language I've known the longest. When you work with data, it's always a sensible choice.</p>
-    <p>MongoDB could have been something else, but AIS data changes with the type of ship, and a document fits that well. It also gives me geospatial indexes and automatic expiry (TTL) out of the box.</p>
-    <p>Streamlit because I'm not a frontend developer, and it kept the whole stack in Python.</p>
+    <h3 data-i18n="whyStack">Why this stack</h3>
+    <p data-i18n="whyPython">Python for fast prototyping and its huge set of libraries, and because it's the language I've known the longest. When you work with data, it's always a sensible choice.</p>
+    <p data-i18n="whyMongo">The database could have been something else, but AIS data changes with the type of ship, and a document fits that well. It also gives me geospatial indexes and automatic expiry (TTL) out of the box.</p>
+    <p data-i18n="whyStreamlit">Streamlit because I'm not a frontend developer, and it kept the whole stack in Python.</p>
 
-    <h3>What didn't work the first time</h3>
-    <p>On October 9 my dashboard showed zero ships in the port of Genoa for over two hours. The database was up, the ingestion was running, the stream was connected. So I listened to the whole world for one minute: 8,066 AIS messages. The Mediterranean: 1,030. Marseille 201, Livorno 29. Genoa: 0.</p>
-    <p>Nothing was broken on my side: the shore receiver covering Genoa had gone quiet. Now one click on Status listens to the live stream for 20 seconds and tells you which link failed: the database, the ingestion, the AIS feed, or just no coverage over the port.</p>
-    <p>In data, a zero is a claim. You should be able to back it up.</p>
+    <h3 data-i18n="didntWork">What didn't work the first time</h3>
+    <p data-i18n="zeroShips">On October 9 my dashboard showed zero ships in the port of Genoa for over two hours. The database was up, the ingestion was running, the stream was connected. So I listened to the whole world for one minute: 8,066 AIS messages. The Mediterranean: 1,030. Marseille 201, Livorno 29. Genoa: 0.</p>
+    <p data-i18n="receiver">Nothing was broken on my side: the shore receiver covering Genoa had gone quiet. Now one click on Status listens to the live stream for 20 seconds and tells you which link failed: the database, the ingestion, the AIS feed, or just no coverage over the port.</p>
+    <p data-i18n="zeroClaim">In data, a zero is a claim. You should be able to back it up.</p>
 
     <figure>
-      <img src="assets/harborwatch-status.gif" alt="HarborWatch Status panel checking the live AIS stream" width="690" height="750" loading="lazy">
-      <figcaption>The Status check on the live stream. <a href="https://github.com/GiuseppeSaluto/HarborWatch">Code and full write-up on GitHub</a>.</figcaption>
+      <img src="assets/harborwatch-status.gif" alt="HarborWatch Status panel checking the live AIS stream" data-i18n-alt="statusGif" width="690" height="750" loading="lazy">
+      <figcaption data-i18n="statusCaption">The Status check on the live stream. <a href="https://github.com/GiuseppeSaluto/HarborWatch">Code and full write-up on GitHub</a>.</figcaption>
     </figure>
 
-    <h3>What I'd do differently today</h3>
-    <p>Plan for a second data source from day one. Everything depends on AISStream, a free feed with no guarantees, and October 9 showed what happens when its receiver over Genoa goes quiet. The Status check tells me which link broke, but it can't bring the ships back.</p>
-    <p>Today I'd build the ingestion to merge more than one feed and drop the duplicates: AISHub, which shares data with whoever contributes a receiver; a commercial network such as Worldwide AIS; or my own receiver, an RTL-SDR and a VHF antenna on the Raspberry Pi.</p>
+    <h3 data-i18n="differently">What I'd do differently today</h3>
+    <p data-i18n="secondSource">Plan for a second data source from day one. Everything depends on AISStream, a free feed with no guarantees, and October 9 showed what happens when its receiver over Genoa goes quiet. The Status check tells me which link broke, but it can't bring the ships back.</p>
+    <p data-i18n="mergeFeeds">Today I'd build the ingestion to merge more than one feed and drop the duplicates: AISHub, which shares data with whoever contributes a receiver; a commercial network such as Worldwide AIS; or my own receiver, an RTL-SDR and a VHF antenna on the Raspberry Pi.</p>
   </section>
 
   <section id="now">
-    <h2>now</h2>
+    <h2 data-i18n="now">now</h2>
     <ul class="now">
-      <li>Studying Rust and Elixir.</li>
-      <li>Looking for a backend or DevOps role. <a href="mailto:g.saluto15@gmail.com">Say hi</a>.</li>
+      <li data-i18n="studying">Studying Rust and Elixir.</li>
+      <li data-i18n="looking">Looking for a backend or DevOps role. <a href="mailto:g.saluto15@gmail.com">Say hi</a>.</li>
     </ul>
   </section>
 
   <footer>
-    <nav aria-label="Elsewhere">
+    <nav aria-label="Elsewhere" data-i18n-label="elsewhere">
       <a href="https://github.com/GiuseppeSaluto">github</a>
       <a href="https://linkedin.com/in/giuseppe-saluto">linkedin</a>
       <a rel="me" href="https://mastodon.social/@Giuseppe_Saluto">mastodon</a>
@@ -357,10 +370,85 @@
   // coordinates and live time in the top bar, like the watch face. Without JS it shows just the coordinates.
   const clock = document.getElementById("clock");
   const coords = clock.textContent;
-  const fmt = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Rome", weekday: "short", hour: "2-digit", minute: "2-digit" });
+  const timeFormat = (locale) => new Intl.DateTimeFormat(locale, { timeZone: "Europe/Rome", weekday: "short", hour: "2-digit", minute: "2-digit" });
+  let fmt = timeFormat("en-GB");
   const tick = () => { clock.textContent = coords + " · " + fmt.format(new Date()); };
   tick();
   setInterval(tick, 15000);
+
+  // Italian version. The English stays in the HTML, so search engines and visitors without JS get it as is;
+  // the Italian lives here, by the data-i18n key on each element. The choice is remembered on this browser.
+  const ship = '<i aria-hidden="true"></i>';
+  const it = {
+    tagline: "Backend developer. Costruisco backend che trasformano i dati del mondo reale in qualcosa che le persone possono usare. Python è il mio linguaggio principale; Rust è quello che scelgo quando un servizio deve essere piccolo e veloce.",
+    offClock: "Fuori dal lavoro: trekking e natura, videogiochi, mondi fantasy e sci-fi, e ottimizzare qualcosa che probabilmente non ne aveva bisogno.",
+    portrait: "Ritratto di Giuseppe Saluto",
+    shipped: "pubblicato",
+    shippedOn: '<a href="https://hex.pm/packages/aisstream">aisstream</a> su hex',
+    base: "modena, italia",
+    seeking: "cerco",
+    seekingWhat: "backend o devops · emilia-romagna o remoto ",
+    sections: "Sezioni",
+    projects: "progetti",
+    now: "adesso",
+    tagHex: "pacchetto hex",
+    tagGenoa: "porto di genova",
+    tagNasa: "dati nasa",
+    tagSatellite: "dati satellitari",
+    tagIot: "iot industriale",
+    tagTerminal: "app da terminale",
+    underway: ship + "in corso",
+    berth: ship + "completato",
+    anchored: ship + "in pausa",
+    descAisstream: "Client WebSocket per l'API di AISStream. Riconnessione con backoff, compressione, posizioni delle navi in tempo reale.",
+    descHarborWatch: "Monitor in tempo reale della congestione portuale su dati AIS, con un ottimizzatore del piano d'ormeggio per le navi in attesa alla fonda.",
+    descAstroForge: "Traccia gli asteroidi vicini alla Terra: un'API in Python, un motore di rischio in Rust, MongoDB e una dashboard da terminale.",
+    descUmbra: "Individua isole di calore urbane e aree verdi dalle immagini Sentinel-2, mostrate su una mappa navigabile.",
+    descMqtt: "Macchine industriali simulate pubblicano via MQTT, un servizio Rust salva i dati, Grafana li mostra in tempo reale.",
+    descMouse: "Tiene sveglio il computer muovendo il mouse, con un'interfaccia da terminale.",
+    python: "Il mio coltellino svizzero.",
+    rust: "Per quando il gioco si fa duro.",
+    elixir: "Sto imparando la filosofia del \"let it crash\".",
+    docker: "Per consegnare quello che mi serve, ovunque.",
+    whyStack: "Perché questo stack",
+    whyPython: "Python per prototipare in fretta e per l'enorme quantità di librerie, e perché è il linguaggio che conosco da più tempo. Quando lavori con i dati, è sempre una scelta sensata.",
+    whyMongo: "Il database poteva essere anche altro, ma i dati AIS cambiano a seconda del tipo di nave e un documento si adatta bene. In più mi dà indici geospaziali e scadenza automatica (TTL) già pronti.",
+    whyStreamlit: "Streamlit perché non sono un frontend developer, e mi ha permesso di tenere tutto lo stack in Python.",
+    didntWork: "Cosa non ha funzionato la prima volta",
+    zeroShips: "Il 9 ottobre la mia dashboard ha mostrato zero navi nel porto di Genova per più di due ore. Il database era su, l'ingestion girava, lo stream era connesso. Così ho ascoltato il mondo intero per un minuto: 8.066 messaggi AIS. Il Mediterraneo: 1.030. Marsiglia 201, Livorno 29. Genova: 0.",
+    receiver: "Dal mio lato non c'era niente di rotto: il ricevitore a terra che copre Genova aveva smesso di trasmettere. Ora un clic su Status ascolta lo stream in tempo reale per 20 secondi e ti dice quale pezzo si è rotto: il database, l'ingestion, il feed AIS o semplicemente nessuna copertura sul porto.",
+    zeroClaim: "Nei dati, uno zero è un'affermazione. Dovresti poterla dimostrare.",
+    statusGif: "Il pannello Status di HarborWatch che controlla lo stream AIS in tempo reale",
+    statusCaption: 'Il controllo Status sullo stream in tempo reale. <a href="https://github.com/GiuseppeSaluto/HarborWatch">Codice e resoconto completo su GitHub</a>.',
+    differently: "Cosa farei diversamente oggi",
+    secondSource: "Prevedere una seconda fonte di dati fin dal primo giorno. Tutto dipende da AISStream, un feed gratuito senza garanzie, e il 9 ottobre ha mostrato cosa succede quando il suo ricevitore su Genova smette di trasmettere. Il controllo Status mi dice quale pezzo si è rotto, ma non può riportare indietro le navi.",
+    mergeFeeds: "Oggi costruirei l'ingestion per unire più feed e scartare i duplicati: AISHub, che condivide i dati con chi contribuisce con un ricevitore; una rete commerciale come Worldwide AIS; oppure un mio ricevitore, una RTL-SDR e un'antenna VHF sul Raspberry Pi.",
+    studying: "Studio Rust ed Elixir.",
+    looking: 'Cerco un ruolo backend o DevOps. <a href="mailto:g.saluto15@gmail.com">Scrivimi</a>.',
+    elsewhere: "Altrove",
+  };
+  // [element, what to swap, English text], read from the page once
+  const texts = [
+    ...[...document.querySelectorAll("[data-i18n]")].map((el) => [el, "innerHTML", el.dataset.i18n]),
+    ...[...document.querySelectorAll("[data-i18n-alt]")].map((el) => [el, "alt", el.dataset.i18nAlt]),
+  ].map(([el, prop, key]) => [el, prop, key, el[prop]]);
+  const labels = [...document.querySelectorAll("[data-i18n-label]")].map((el) => [el, el.dataset.i18nLabel, el.getAttribute("aria-label")]);
+  const langButton = document.getElementById("lang");
+  const setLang = (lang) => {
+    const italian = lang === "it";
+    document.documentElement.lang = lang;
+    for (const [el, prop, key, en] of texts) el[prop] = italian ? it[key] : en;
+    for (const [el, key, en] of labels) el.setAttribute("aria-label", italian ? it[key] : en);
+    langButton.setAttribute("aria-label", italian ? "Read in English" : "Leggi in italiano");
+    fmt = timeFormat(italian ? "it-IT" : "en-GB");
+    tick();
+    try { localStorage.setItem("lang", lang); } catch {}
+  };
+  langButton.hidden = false;
+  langButton.addEventListener("click", () => setLang(document.documentElement.lang === "it" ? "en" : "it"));
+  let savedLang = "en";
+  try { savedLang = localStorage.getItem("lang") || "en"; } catch {}
+  setLang(savedLang);
 
   // Name wave: the letter under the mouse and its neighbours keep scrambling while the mouse is there,
   // and settle back a moment after it moves on, so moving across the name leaves a wave behind.
