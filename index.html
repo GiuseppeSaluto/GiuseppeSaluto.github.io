@@ -75,7 +75,7 @@
       font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
     }
     h1 { font-size: clamp(28px, 7vw, 44px); line-height: 1.05; margin: 0 0 10px; letter-spacing: -1px; }
-    .tagline { margin: 0; color: var(--muted); max-width: 42ch; }
+    .tagline { margin: 0; color: var(--muted); max-width: 50ch; }
     .tagline + .tagline { margin-top: 10px; }
 
     .portrait {
@@ -99,6 +99,7 @@
     }
     .readout dt { color: var(--accent); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; padding-top: 3px; }
     .readout dd { margin: 0; }
+    .nowrap { white-space: nowrap; }
     .cursor::after { content: "▋"; color: var(--signal); animation: blink 1.1s steps(1) infinite; }
     @keyframes blink { 50% { opacity: 0; } }
 
@@ -164,7 +165,7 @@
 
     /* case study: three short answers and one image */
     .case h3 { margin: 24px 0 6px; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); }
-    .case p { margin: 0 0 10px; }
+    .case p { margin: 0 0 10px; max-width: 65ch; } /* shorter lines read easier in monospace */
     .case ul { margin: 0; padding-left: 18px; }
     .case figure { margin: 20px 0 0; }
     .case img { display: block; width: 100%; max-width: 380px; height: auto; border: 1px solid var(--line); border-radius: 12px; }
@@ -254,7 +255,7 @@
     <dt data-i18n="shipped">shipped</dt><dd data-i18n="shippedOn"><a href="https://hex.pm/packages/aisstream">aisstream</a> on hex</dd>
     <dt>base</dt><dd data-i18n="base">modena, italy</dd>
     <dt data-i18n="seeking">seeking</dt><dd data-i18n="seekingWhat">backend or devops</dd>
-    <dt data-i18n="where">where</dt><dd class="cursor" data-i18n="whereWhat">on-site or hybrid in emilia-romagna · remote · open&nbsp;to&nbsp;relocate&nbsp;</dd>
+    <dt data-i18n="where">where</dt><dd class="cursor" data-i18n="whereWhat">on-site or hybrid in <span class="nowrap">emilia-romagna</span>&nbsp;· remote&nbsp;· open&nbsp;to&nbsp;relocate&nbsp;</dd>
   </dl>
 
   <nav class="buttons" aria-label="Sections" data-i18n-label="sections">
@@ -392,7 +393,7 @@
     seeking: "cerco",
     seekingWhat: "backend o devops",
     where: "dove",
-    whereWhat: "in sede o ibrido in emilia-romagna · da remoto · disponibile&nbsp;a&nbsp;trasferirmi&nbsp;",
+    whereWhat: 'in sede o ibrido in <span class="nowrap">emilia-romagna</span>&nbsp;· da remoto&nbsp;· disponibile&nbsp;a&nbsp;trasferirmi&nbsp;',
     sections: "Sezioni",
     projects: "progetti",
     now: "adesso",
